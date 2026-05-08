@@ -1,0 +1,64 @@
+clc;
+clear all;
+close all;
+
+% Given parameters
+Vpp = 4;           % Peak to Peak Voltage
+N = 7;             % Number of bits
+fm = 3.5e3;        % Message frequency
+Rb = 50e3;         % Bit rate
+
+% Sampling frequency
+fs = Rb / N;
+
+% Number of quantization levels
+L = 2^N;
+
+% Quantization step size
+delta = Vpp / L;
+
+% SQNR calculation
+SQNR = 6.02*N + 1.76;
+
+% Display results
+fprintf('Sampling Frequency fs = %.2f Hz\n', fs);
+fprintf('Quantization Levels L = %d\n', L);
+fprintf('Step Size Delta = %.4f V\n', delta);
+fprintf('Signal to Quantization Noise Ratio = %.2f dB\n', SQNR);
+
+% ---------------------------------------------------
+% Message Signal
+% ---------------------------------------------------
+t = 0:1/(100*fm):2/fm;
+m = (Vpp/2)*sin(2*pi*fm*t);
+
+% PCM Sampling
+ts = 0:1/fs:2/fm;
+ms = (Vpp/2)*sin(2*pi*fm*ts);
+
+% Quantization
+mq = round(ms/delta)*delta;
+
+% Plotting
+figure;
+
+subplot(3,1,1);
+plot(t,m,'b','LineWidth',1.5);
+title('Original Message Signal');
+xlabel('Time');
+ylabel('Amplitude');
+grid on;
+
+subplot(3,1,2);
+stem(ts,ms,'r','filled');
+title('Sampled Signal');
+xlabel('Time');
+ylabel('Amplitude');
+grid on;
+
+subplot(3,1,3);
+stairs(ts,mq,'k','LineWidth',1.5);
+title('Quantized PCM Signal');
+xlabel('Time');
+ylabel('Amplitude');
+grid on;
