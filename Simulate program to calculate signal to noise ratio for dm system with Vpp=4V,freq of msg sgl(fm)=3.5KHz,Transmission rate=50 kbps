@@ -1,0 +1,49 @@
+clc;%Simulate program to calculate signal to noise ratio for dm system with Vpp=4V,freq of msg sgl(fm)=3.5KHz,Transmission rate=50 kbps
+clear;
+close all;
+
+% Given data
+Vpp=4;
+fm=3500;
+Rb=50000;
+
+fs=Rb;
+d=Vpp/32;
+
+% Signal
+t=0:1/(100*fm):2/fm;
+x=(Vpp/2)*sin(2*pi*fm*t);
+
+% Sampling
+ts=0:1/fs:2/fm;
+xs=(Vpp/2)*sin(2*pi*fm*ts);
+
+% DM
+y=zeros(size(xs));
+b=zeros(size(xs));
+
+for i=2:length(xs)
+
+    if xs(i)>y(i-1)
+        y(i)=y(i-1)+d;
+        b(i)=1;
+    else
+        y(i)=y(i-1)-d;
+        b(i)=0;
+    end
+
+end
+
+% SNR
+n=xs-y;
+snr=10*log10(mean(xs.^2)/mean(n.^2));
+
+% Output
+fprintf('Sampling Frequency = %.2f Hz\n',fs)
+fprintf('Step Size = %.3f V\n',d)
+fprintf('SNR = %.2f dB\n',snr)
+
+% Graphs
+subplot(311),plot(t,x),title('Message Signal')
+subplot(312),stairs(ts,y),title('DM Signal')
+subplot(313),stairs(ts,b),title('DM Output Bits')
