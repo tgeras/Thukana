@@ -1,0 +1,71 @@
+Statement of Sampling Theorem:
+According to Sampling Theorem, a continuous time signal can be reconstructed completely from its samples if the sampling frequency is greater than or equal
+to twice the maximum frequency of the message signal.
+fs≥2fm
+Criteria shown:
+Under Sampling → fs<2fm
+Nyquist Sampling → fs=2fm
+Over Sampling →fs>2fm
+	​
+
+clc;
+clear all;
+close all;
+
+% Parameters
+A = 1;          % Amplitude
+fm = 10;        % Message signal frequency (Hz)
+
+% Continuous signal
+t = 0:0.001:1;
+m = A*sin(2*pi*fm*t);
+
+figure;
+
+% ------------------------------------------------
+% Case 1 : Under Sampling (fs < 2fm)
+% ------------------------------------------------
+fs1 = 15;               % Sampling frequency
+ts1 = 0:1/fs1:1;
+s1 = A*sin(2*pi*fm*ts1);
+
+subplot(3,1,1);
+plot(t,m,'b','LineWidth',1.5);
+hold on;
+stem(ts1,s1,'r','filled');
+title('Under Sampling : fs < 2fm');
+xlabel('Time');
+ylabel('Amplitude');
+grid on;
+
+% ------------------------------------------------
+% Case 2 : Nyquist Sampling (fs = 2fm)
+% ------------------------------------------------
+fs2 = 20;
+ts2 = 0:1/fs2:1;
+s2 = A*sin(2*pi*fm*ts2);
+
+subplot(3,1,2);
+plot(t,m,'b','LineWidth',1.5);
+hold on;
+stem(ts2,s2,'r','filled');
+title('Nyquist Sampling : fs = 2fm');
+xlabel('Time');
+ylabel('Amplitude');
+grid on;
+
+% ------------------------------------------------
+% Case 3 : Over Sampling (fs > 2fm)
+% ------------------------------------------------
+fs3 = 50;
+ts3 = 0:1/fs3:1;
+s3 = A*sin(2*pi*fm*ts3);
+
+subplot(3,1,3);
+plot(t,m,'b','LineWidth',1.5);
+hold on;
+stem(ts3,s3,'r','filled');
+title('Over Sampling : fs > 2fm');
+xlabel('Time');
+ylabel('Amplitude');
+grid on;
